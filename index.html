@@ -63,7 +63,7 @@
 
   <script>
     function atualizaDados() {
-      fetch('/dados')
+      fetch('http://192.168.101.98/dados')
         .then(response => response.json())
         .then(data => {
           document.getElementById('temp').innerText = 'Temperatura: ' + data.temperatura + ' °C';
