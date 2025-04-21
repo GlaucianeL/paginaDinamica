@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Monitoramento ESP8266</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      margin-top: 20px;
+    }
+    .info {
+      font-size: 1.5em;
+      margin: 15px 0;
+    }
+    button {
+      padding: 12px 25px;
+      margin: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .on {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .on:hover {
+      background-color: #45a049;
+    }
+    .off {
+      background-color: #f44336;
+      color: white;
+    }
+    .off:hover {
+      background-color: #da190b;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌡️ Monitoramento ESP8266</h1>
+  <div class="card">
+    <div class="info" id="temp">Temperatura: -- °C</div>
+    <div class="info" id="umid">Umidade: -- %</div>
+    <div class="info" id="led">LED: --</div>
+    <button class="on" onclick="ligaLED()">Ligar LED</button>
+    <button class="off" onclick="desligaLED()">Desligar LED</button>
+  </div>
+
+  <script>
+    function atualizaDados() {
+      fetch('/dados')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('temp').innerText = 'Temperatura: ' + data.temperatura + ' °C';
+          document.getElementById('umid').innerText = 'Umidade: ' + data.umidade + ' %';
+          document.getElementById('led').innerText = 'LED: ' + data.led;
+        })
+        .catch(error => {
+          console.error('Erro ao obter dados:', error);
+        });
+    }
+
+    function ligaLED() {
+      fetch('/led/on').then(() => atualizaDados());
+    }
+
+    function desligaLED() {
+      fetch('/led/off').then(() => atualizaDados());
+    }
+
+    setInterval(atualizaDados, 3000);
+    atualizaDados();
+  </script>
+</body>
+</html>
