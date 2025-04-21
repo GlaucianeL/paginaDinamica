@@ -2,35 +2,34 @@
 <html>
 <head>
   <title>Monitoramento ESP8266</title>
+  <meta charset="UTF-8">
   <script>
     function atualizarDados() {
-      fetch('http://<192.168.101.98>/dados')
+      fetch('http://192.168.0.101/dados') // <-- troque pelo IP real do ESP
         .then(response => response.json())
         .then(data => {
           document.getElementById('temperatura').textContent = data.temperatura + ' °C';
           document.getElementById('umidade').textContent = data.umidade + ' %';
           document.getElementById('led').textContent = data.led;
         })
-        .catch(error => console.error('Erro ao obter dados:', error));
+        .catch(error => {
+          console.error('Erro ao obter dados:', error);
+          document.getElementById('temperatura').textContent = '--';
+          document.getElementById('umidade').textContent = '--';
+          document.getElementById('led').textContent = '--';
+        });
     }
 
     function ligarLED() {
-      fetch('http://<192.168.101.98>/led/on')
-        .then(response => response.text())
-        .then(() => {
-          document.getElementById('led').textContent = 'Ligado';
-        });
+      fetch('http://192.168.0.101/led/on');
     }
 
     function desligarLED() {
-      fetch('http://<192.168.101.98>/led/off')
-        .then(response => response.text())
-        .then(() => {
-          document.getElementById('led').textContent = 'Desligado';
-        });
+      fetch('http://192.168.0.101/led/off');
     }
 
     setInterval(atualizarDados, 3000);
+    window.onload = atualizarDados;
   </script>
 </head>
 <body>
