@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <script>
     function atualizarDados() {
-      fetch('http://192.168.0.101/dados') // <-- troque pelo IP real do ESP
+      fetch('http://192.168.101.98/dados') // <-- troque pelo IP real do ESP
         .then(response => response.json())
         .then(data => {
           document.getElementById('temperatura').textContent = data.temperatura + ' °C';
@@ -21,11 +21,11 @@
     }
 
     function ligarLED() {
-      fetch('http://192.168.0.101/led/on');
+      fetch('http://192.168.101.98/led/on');
     }
 
     function desligarLED() {
-      fetch('http://192.168.0.101/led/off');
+      fetch('http://192.168.101.98/led/off');
     }
 
     setInterval(atualizarDados, 3000);
