@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-  <title>Monitoramento ESP8266</title>
   <meta charset="UTF-8">
+  <title>Monitoramento ESP8266</title>
   <script>
     function atualizarDados() {
-      fetch('http://192.168.101.98/dados') // <-- troque pelo IP real do ESP
+      fetch('http://192.168.101.98/dados')
         .then(response => response.json())
         .then(data => {
           document.getElementById('temperatura').textContent = data.temperatura + ' °C';
@@ -14,9 +14,6 @@
         })
         .catch(error => {
           console.error('Erro ao obter dados:', error);
-          document.getElementById('temperatura').textContent = '--';
-          document.getElementById('umidade').textContent = '--';
-          document.getElementById('led').textContent = '--';
         });
     }
 
@@ -34,10 +31,10 @@
 </head>
 <body>
   <h1>Monitoramento ESP8266</h1>
-  <p>Temperatura: <span id="temperatura">--</span></p>
-  <p>Umidade: <span id="umidade">--</span></p>
-  <p>LED: <span id="led">--</span></p>
-  <button onclick="ligarLED()">Ligar LED</button>
-  <button onclick="desligarLED()">Desligar LED</button>
+  <p>🌡️ Temperatura: <span id="temperatura">--</span></p>
+  <p>💧 Umidade: <span id="umidade">--</span></p>
+  <p>💡 LED: <span id="led">--</span></p>
+  <button onclick="ligarLED()">🔛 Ligar LED</button>
+  <button onclick="desligarLED()">🔌 Desligar LED</button>
 </body>
 </html>
