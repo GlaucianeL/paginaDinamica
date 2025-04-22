@@ -1,40 +1,59 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Monitoramento ESP8266</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Monitoramento DHT11</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; padding: 2rem; }
+    h1 { margin-bottom: 1rem; }
+    .card { background: white; display: inline-block; padding: 2rem; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+    .data { font-size: 1.5rem; margin: 1rem 0; }
+    button { padding: 0.8rem 1.5rem; font-size: 1.2rem; border: none; border-radius: 5px; background: #007bff; color: white; cursor: pointer; }
+    button.off { background: red; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Monitoramento - ESP8266 + DHT11</h1>
+    <div class="data">🌡️ Temperatura: <span id="temp">--</span>°C</div>
+    <div class="data">💧 Umidade: <span id="hum">--</span>%</div>
+    <div class="data">💡 LED: <button id="ledBtn" onclick="toggleLED()">Ligar</button></div>
+  </div>
+
   <script>
-    function atualizarDados() {
-      fetch('http://192.168.101.98/dados')
+    const serverIP = "http://192.168.101.98"; // Troque pelo IP do seu ESP8266
+
+    let ledOn = false;
+
+    function getData() {
+      fetch(`${serverIP}/get`)
         .then(response => response.json())
         .then(data => {
-          document.getElementById('temperatura').textContent = data.temperatura + ' °C';
-          document.getElementById('umidade').textContent = data.umidade + ' %';
-          document.getElementById('led').textContent = data.led;
+          document.getElementById("temp").textContent = data.temperatura.toFixed(1);
+          document.getElementById("hum").textContent = data.umidade.toFixed(1);
+          ledOn = data.led === 1;
+          updateButton();
         })
         .catch(error => {
-          console.error('Erro ao obter dados:', error);
+          console.log("Erro:", error);
         });
     }
 
-    function ligarLED() {
-      fetch('http://192.168.101.98/led/on');
+    function toggleLED() {
+      ledOn = !ledOn;
+      fetch(`${serverIP}/led?valor=${ledOn ? "1" : "0"}`)
+        .then(() => updateButton());
     }
 
-    function desligarLED() {
-      fetch('http://192.168.101.98/led/off');
+    function updateButton() {
+      const btn = document.getElementById("ledBtn");
+      btn.textContent = ledOn ? "Desligar" : "Ligar";
+      btn.className = ledOn ? "off" : "";
     }
 
-    setInterval(atualizarDados, 3000);
-    window.onload = atualizarDados;
+    setInterval(getData, 3000);
+    window.onload = getData;
   </script>
-</head>
-<body>
-  <h1>Monitoramento ESP8266</h1>
-  <p>🌡️ Temperatura: <span id="temperatura">--</span></p>
-  <p>💧 Umidade: <span id="umidade">--</span></p>
-  <p>💡 LED: <span id="led">--</span></p>
-  <button onclick="ligarLED()">🔛 Ligar LED</button>
-  <button onclick="desligarLED()">🔌 Desligar LED</button>
 </body>
 </html>
