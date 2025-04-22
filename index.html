@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -15,14 +15,14 @@
 </head>
 <body>
   <div class="card">
-    <h1>Monitoramento e Controle</h1>
+    <h1>Monitoramento - ESP8266 + DHT11</h1>
     <div class="data">🌡️ Temperatura: <span id="temp">--</span>°C</div>
     <div class="data">💧 Umidade: <span id="hum">--</span>%</div>
     <div class="data">💡 LED: <button id="ledBtn" onclick="toggleLED()">Ligar</button></div>
   </div>
 
   <script>
-    const serverIP = "http://192.168.101.98/get"; // Troque pelo IP do seu ESP8266
+    const serverIP = "http://192.168.101.98"; // Troque pelo IP do seu ESP8266
 
     let ledOn = false;
 
@@ -43,7 +43,8 @@
     function toggleLED() {
       ledOn = !ledOn;
       fetch(`${serverIP}/led?valor=${ledOn ? "1" : "0"}`)
-        .then(() => updateButton());
+        .then(() => updateButton())
+        .catch(error => console.log("Erro ao mudar estado do LED:", error));
     }
 
     function updateButton() {
